@@ -9,6 +9,10 @@ class SimpleDB
     @transactions = []
   end
 
+  def run
+    Runner.new(self).run
+  end
+
   def set(key, value)
     log_transaction("set", key, value) unless rolling_back
     decrease_value_of_key(key)
@@ -50,6 +54,10 @@ class SimpleDB
     else
       @transactions = []
     end
+  end
+
+  def end
+    exit
   end
 
 private
