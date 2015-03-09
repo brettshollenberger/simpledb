@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
 require "rake"
-require "pry"
 
 INPUT_FILES  = Rake::FileList.new("example/input/**/*.txt")
 OUTPUT_FILES = INPUT_FILES.pathmap("%{input/,output/}X%x")
