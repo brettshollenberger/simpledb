@@ -11,10 +11,6 @@ describe AVLTree::Node do
     expect(@node.value).to eq 1
   end
 
-  it "does not accept digits as the start of the key" do
-    expect { AVLTree::Node.new(key: "12", value: 1) }.to raise_error
-  end
-
   it "initializes left & right to NilNode" do
     expect(@node.left).to  eq AVLTree::NilNode
     expect(@node.right).to eq AVLTree::NilNode
