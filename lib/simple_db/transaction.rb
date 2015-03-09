@@ -18,5 +18,9 @@ class SimpleDB
     def set(*args)
       TransactionSet.new(*args)
     end
+
+    def unset(*args)
+      TransactionUnset.new(*args)
+    end
   end
 end

@@ -1,7 +1,7 @@
 class SimpleDB
   NO_TRANSACTION = "NO TRANSACTION"
 
-  attr_accessor :transactions, :keys, :values
+  attr_accessor :transactions, :keys, :values, :rolling_back
 
   def initialize
     @keys         = AVLTree.new
@@ -10,7 +10,7 @@ class SimpleDB
   end
 
   def set(key, value)
-    log_transaction("set", key, value)
+    log_transaction("set", key, value) unless rolling_back
     decrease_value_of_key(key)
     set_key(key, value)
     increase_value(value)
@@ -25,6 +25,7 @@ class SimpleDB
   end
 
   def unset(key)
+    log_transaction("unset", key) unless rolling_back
     @keys.delete(key)
   end
 
@@ -36,8 +37,10 @@ class SimpleDB
     if @transactions.empty?
       NO_TRANSACTION
     else
-      @transactions.last.actions.each(&:rollback)
+      @rolling_back = true
+      @transactions.last.actions.reverse.each(&:rollback)
       @transactions.pop
+      @rolling_back = false
     end
   end
 

@@ -64,5 +64,30 @@ describe SimpleDB do
     db.commit
 
     expect(db.transactions.length).to be 0
+    expect(db.get "hello").to eq "world"
+    expect(db.get "goodbye").to eq "world"
+  end
+
+  it "rollsback unset" do
+    db.set "hello", "world"
+
+    db.begin
+    db.unset "hello"
+
+    expect(db.get "hello").to be nil
+
+    db.rollback
+
+    expect(db.get "hello").to eq "world"
+  end
+
+  it "rolls back actions in reverse order" do
+    db.set "hello", "world"
+    db.begin
+    db.set "hello", "brett"
+    db.set "hello", "shalom"
+    db.rollback
+
+    expect(db.get "hello").to eq "world"
   end
 end
