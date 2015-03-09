@@ -63,6 +63,7 @@ class SimpleDB
   end
 
   def end
+    exit
   end
 
 private

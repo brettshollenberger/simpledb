@@ -1,5 +1,17 @@
 # SimpleDB
 
+### Running
+
+```bash
+bin/simple_db
+```
+
+SimpleDB reads from stdin and writes to stdout, so you can also pipe I/O.
+
+```bash
+bin/simple_db < input.txt
+```
+
 ### Database Commands
 
 * `SET` name value – Set the variable name to the value value. Neither variable names nor values will contain spaces.

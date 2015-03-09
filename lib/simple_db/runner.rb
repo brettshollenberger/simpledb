@@ -12,7 +12,11 @@ class SimpleDB
         cmd   = input.first.downcase
         args  = input[1..-1]
 
-        puts db.send(cmd, *args)
+        begin
+          puts db.send(cmd, *args)
+        rescue
+          puts "Invalid input. Try again."
+        end
       end
     end
   end
