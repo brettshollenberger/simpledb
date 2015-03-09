@@ -45,6 +45,7 @@ GEM
     pry-byebug (3.0.1)
       byebug (~> 3.4)
       pry (~> 0.10)
+    rake (10.4.2)
     rb-fsevent (0.9.4)
     rb-inotify (0.9.5)
       ffi (>= 0.5.0)
@@ -76,6 +77,7 @@ DEPENDENCIES
   guard-rspec
   pry
   pry-byebug
+  rake
   rspec
   terminal-notifier
   terminal-notifier-guard

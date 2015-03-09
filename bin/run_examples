@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+
+require "rake"
+require "pry"
+
+INPUT_FILES  = Rake::FileList.new("example/input/**/*.txt")
+OUTPUT_FILES = INPUT_FILES.pathmap("%{input/,output/}X%x")
+
+INPUT_FILES.zip(OUTPUT_FILES) do |input, output|
+  actual   = `bin/simple_db < #{input}`
+  expected = File.read(output)
+
+  print "#{input}: "
+
+  if actual == expected
+    print "ok"
+  else
+    print "expected: "
+    puts expected
+    print "actual :"
+    puts actual
+  end
+
+  puts
+end
+

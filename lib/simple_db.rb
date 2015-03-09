@@ -18,10 +18,11 @@ class SimpleDB
     decrease_value_of_key(key)
     set_key(key, value)
     increase_value(value)
+    nil
   end
 
   def get(key)
-    @keys[key]
+    @keys[key] || "NULL"
   end
 
   def numequalto(value)
@@ -30,11 +31,14 @@ class SimpleDB
 
   def unset(key)
     log_transaction("unset", key) unless rolling_back
+    decrease_value_of_key(key)
     @keys.delete(key)
+    nil
   end
 
   def begin
     @transactions.push(Transaction.new(self))
+    nil
   end
 
   def rollback
@@ -45,6 +49,7 @@ class SimpleDB
       @transactions.last.actions.reverse.each(&:rollback)
       @transactions.pop
       @rolling_back = false
+      nil
     end
   end
 
@@ -53,11 +58,11 @@ class SimpleDB
       NO_TRANSACTION
     else
       @transactions = []
+      nil
     end
   end
 
   def end
-    exit
   end
 
 private

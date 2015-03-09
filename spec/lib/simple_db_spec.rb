@@ -13,7 +13,7 @@ describe SimpleDB do
     db.set "hello", "world"
     db.unset "hello"
 
-    expect(db.get "hello").to be nil
+    expect(db.get "hello").to eq "NULL"
   end
 
   it "prints num keys currently set to a given value" do
@@ -33,7 +33,7 @@ describe SimpleDB do
 
     db.rollback
 
-    expect(db.get "hello").to be nil
+    expect(db.get "hello").to eq "NULL"
   end
 
   it "nests transactions, and only rolls back the most recent one" do
@@ -48,12 +48,12 @@ describe SimpleDB do
     db.rollback
 
     expect(db.get "hello").to eq "world"
-    expect(db.get "goodbye").to be nil
+    expect(db.get "goodbye").to eq "NULL"
 
     db.rollback
 
-    expect(db.get "hello").to be nil
-    expect(db.get "goodbye").to be nil
+    expect(db.get "hello").to eq "NULL"
+    expect(db.get "goodbye").to eq "NULL"
   end
 
   it "commits all changes from all open transactions" do
@@ -74,7 +74,7 @@ describe SimpleDB do
     db.begin
     db.unset "hello"
 
-    expect(db.get "hello").to be nil
+    expect(db.get "hello").to eq "NULL"
 
     db.rollback
 
@@ -89,5 +89,16 @@ describe SimpleDB do
     db.rollback
 
     expect(db.get "hello").to eq "world"
+  end
+
+  it "tracks the number of values set with transactions" do
+    db.set "hello", "world"
+    db.begin
+    db.set "goodbye", "world"
+
+    expect(db.numequalto "world").to eq 2
+    db.rollback
+
+    expect(db.numequalto "world").to eq 1
   end
 end
