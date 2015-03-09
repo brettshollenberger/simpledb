@@ -1,10 +1,16 @@
 class SimpleDB
+  NO_TRANSACTION = "NO TRANSACTION"
+
+  attr_accessor :transactions, :keys, :values
+
   def initialize
-    @keys   = AVLTree.new
-    @values = AVLTree.new
+    @keys         = AVLTree.new
+    @values       = AVLTree.new
+    @transactions = []
   end
 
   def set(key, value)
+    log_transaction("set", key, value)
     decrease_value_of_key(key)
     set_key(key, value)
     increase_value(value)
@@ -22,7 +28,34 @@ class SimpleDB
     @keys.delete(key)
   end
 
+  def begin
+    @transactions.push(Transaction.new(self))
+  end
+
+  def rollback
+    if @transactions.empty?
+      NO_TRANSACTION
+    else
+      @transactions.last.actions.each(&:rollback)
+      @transactions.pop
+    end
+  end
+
+  def commit
+    if @transactions.empty?
+      NO_TRANSACTION
+    else
+      @transactions = []
+    end
+  end
+
 private
+  def log_transaction(action, *args)
+    unless @transactions.last.nil?
+      @transactions.last.push(action, *args)
+    end
+  end
+
   def set_key(key, value)
     @keys[key] = value
   end
