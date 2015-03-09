@@ -1,7 +1,5 @@
 class AVLTree
   class Node
-    class InvalidKeyError < StandardError; end
-
     attr_accessor :key, :value, :left, :right, :height
 
     def initialize(options={})
@@ -10,8 +8,6 @@ class AVLTree
       @left   = NilNode
       @right  = NilNode
       @height = 1
-      
-      validate_key
     end
 
     def retrieve(key)
@@ -63,6 +59,24 @@ class AVLTree
       deleted
     end
 
+    def delete_min
+      if @left.empty?
+        [self, delete_self]
+      else
+        deleted, @left = @left.delete_min
+        [deleted, rotate]
+      end
+    end
+
+    def delete_max
+      if @right.empty?
+        [self, delete_self]
+      else
+        deleted, @right = @right.delete_max
+        [deleted, rotate]
+      end
+    end
+
     def rotate
       case @left.height - @right.height
       when +2
@@ -102,6 +116,10 @@ class AVLTree
       @height = (@left.height > @right.height ? @left.height : @right.height) + 1
     end
 
+    def empty?
+      false
+    end
+
     def dump_sexp
       left  = @left.dump_sexp
       right = @right.dump_sexp
@@ -110,11 +128,6 @@ class AVLTree
       else
         @key
       end
-    end
-
-  private
-    def validate_key
-      raise InvalidKeyError if @key =~ /^\d/
     end
   end
 end
